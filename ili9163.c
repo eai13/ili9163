@@ -83,3 +83,54 @@ void ILI9163_WriteChar(ili9163_led_t * screen, uint8_t x, uint8_t y, uint8_t sym
         }
     }
 }
+
+void ILI9163_WriteString(ili9163_led_t * screen, uint8_t x, uint8_t y, uint8_t * str, ili9163_fontlib_t font,
+                         ili9163_colors_t font_color, ili9163_colors_t background){
+
+}
+
+void ILI9163_Fill(ili9163_led_t * screen, ili9163_colors_t color){
+    ILI9163_WriteCommand(screen, ILI9163_CMD_COLUMN_ADDRESS_SET);
+    uint8_t col[4] = { 0, ILI9163_COL_START, 0, ILI9163_COL_START + 127 };
+    ILI9163_WriteData(screen, col, sizeof(col));
+    ILI9163_WriteCommand(screen, ILI9163_CMD_PAGE_ADDRESS_SET);
+    uint8_t row[4] = { 0, ILI9163_ROW_START, 0, ILI9163_ROW_START + 127 };
+    ILI9163_WriteData(screen, row, sizeof(row));
+
+    ILI9163_WriteCommand(screen, ILI9163_CMD_MEMORY_WRITE);
+    for (uint16_t iter = 0; iter < (128 * 128); iter++)
+        ILI9163_WriteData(screen, &color, 3);
+}
+
+void ILI9163_Line(ili9163_led_t * screen, uint8_t x1, uint8_t y1, uint8_t x2, uint8_t y2,
+                  ili9163_colors_t color){
+    
+}
+
+void ILI9163_Rect(ili9163_led_t * screen, uint8_t x, uint8_t y, uint8_t width, uint8_t height,
+                  ili9163_colors_t border_color, ili9163_colors_t fill_color, uint8_t fill_flag){
+    if (fill_flag){
+        ILI9163_WriteCommand(screen, ILI9163_CMD_COLUMN_ADDRESS_SET);
+        uint8_t col[4] = { 0, ILI9163_COL_START + x, 0, ILI9163_COL_START + width + x - 1 };
+        ILI9163_WriteData(screen, col, sizeof(col));
+        ILI9163_WriteCommand(screen, ILI9163_CMD_PAGE_ADDRESS_SET);
+        uint8_t row[4] = { 0, ILI9163_ROW_START + y, 0, ILI9163_ROW_START + height + y - 1 };
+        ILI9163_WriteData(screen, row, sizeof(row));
+
+        ILI9163_WriteCommand(screen, ILI9163_CMD_MEMORY_WRITE);
+        for (uint8_t row = 0; row < height; row++){
+            for (uint8_t col = 0; col < width; col++){
+                if ((col == 0) || (col == (width - 1)) || (row == 0) || (row == (height - 1)))
+                    ILI9163_WriteData(screen, &border_color, 3);
+                else
+                    ILI9163_WriteData(screen, &fill_color, 3);
+            }
+        }
+    }
+    else{
+        ILI9163_Line(screen, x, y, x + width, y, border_color);
+        ILI9163_Line(screen, x, y, x, y + height, border_color);
+        ILI9163_Line(screen, x + width, y, x + width, y + height, border_color);
+        ILI9163_Line(screen, x, y + height, x + width, y + height, border_color);
+    }
+}
