@@ -1,4 +1,6 @@
 #include "ili9163.h"
+#include "ili9163_font.h"
+#include "debug.h"
 
 inline void ILI9163_Init(ili9163_led_t * screen, SPI_HandleTypeDef * spi_hndl, GPIO_TypeDef * cs_port, uint16_t cs_pin, GPIO_TypeDef * a0_port, uint16_t a0_pin, GPIO_TypeDef * reset_port, uint16_t reset_pin){
     screen->hspi = spi_hndl;
@@ -59,21 +61,22 @@ inline void ILI9163_WriteData(ili9163_led_t * screen, uint8_t * pdata, uint32_t 
     _SPI_TX(screen->hspi, pdata, size);
 }
 
-void ILI9163_WriteChar(ili9163_led_t * screen, uint8_t x, uint8_t y, uint8_t sym, ili9163_fontlib_t * font,
+void ILI9163_WriteChar(ili9163_led_t * screen, uint8_t x, uint8_t y, uint8_t sym, ili9163_fontlib_t font,
                        ili9163_colors_t font_color, ili9163_colors_t background){
     x += ILI9163_COL_START;
     y += ILI9163_ROW_START;
+    uint16_t start_elem = (sym - ' ') * (font.height + 1);
     ILI9163_WriteCommand(screen, ILI9163_CMD_COLUMN_ADDRESS_SET);
-    uint8_t col[4] = { 0, x, 0, x + font->width };
+    uint8_t col[4] = { 0, x, 0, x + font.width };
     ILI9163_WriteData(screen, col, sizeof(col));
     ILI9163_WriteCommand(screen, ILI9163_CMD_PAGE_ADDRESS_SET);
-    uint8_t row[4] = { 0, y, 0, y + font->height };
+    uint8_t row[4] = { 0, y, 0, y + font.height };
     ILI9163_WriteData(screen, row, sizeof(row));
 
     ILI9163_WriteCommand(screen, ILI9163_CMD_MEMORY_WRITE);
-    for (uint8_t r = 0; r <= font->height; r++){
-        for (uint8_t c = 0; c <= font->width; c++){
-            if (font->data[sym - ' '][r] & (1 << c))
+    for (uint16_t r = 0; r <= font.height; r++){
+        for (uint16_t c = 0; c <= font.width; c++){
+            if (font.data[start_elem + r] & (1 << c))
                 ILI9163_WriteData(screen, &font_color, 3);
             else
                 ILI9163_WriteData(screen, &background, 3);

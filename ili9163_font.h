@@ -6,7 +6,7 @@
 typedef struct ili9163_fontlib{
     uint8_t width;
     uint8_t height;
-    uint8_t ** data;
+    const uint8_t * data;
 }ili9163_fontlib_t;
 
 typedef enum ili9163_symlib{
