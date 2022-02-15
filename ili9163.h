@@ -23,20 +23,16 @@ typedef struct ili9163_led{
 }ili9163_led_t;
 
 inline void ILI9163_COMMAND(ili9163_led_t * screen){
-    // HAL_GPIO_WritePin(screen->a0_port, screen->a0_pin, 0);
     _RESET_PIN(screen->a0_port, screen->a0_pin);
 }
 inline void ILI9163_DATA(ili9163_led_t * screen){
-    // HAL_GPIO_WritePin(screen->a0_port, screen->a0_pin, 1);
     _SET_PIN(screen->a0_port, screen->a0_pin);
 }
 
 inline void ILI9163_SELECT(ili9163_led_t * screen){
-    // HAL_GPIO_WritePin(screen->cs_port, screen->cs_pin, 0);
     _RESET_PIN(screen->cs_port, screen->cs_pin);
 }
 inline void ILI9163_DESELECT(ili9163_led_t * screen){
-    // HAL_GPIO_WritePin(screen->cs_port, screen->cs_pin, 1);
     _SET_PIN(screen->cs_port, screen->cs_pin);
 }
 
@@ -44,11 +40,11 @@ void ILI9163_HWReset(ili9163_led_t * screen);
 void ILI9163_WriteCommand(ili9163_led_t * screen, ili9163_cmd_t command);
 void ILI9163_WriteData(ili9163_led_t * screen, uint8_t * pdata, uint32_t size);
 
-void ILI9163_WriteChar(ili9163_led_t * screen, uint8_t x, uint8_t y, uint8_t sym, ili9163_fontlib_t font,
+void ILI9163_WriteChar(ili9163_led_t * screen, uint8_t x, uint8_t y, uint8_t sym, fontlib_t * font,
                        ili9163_colors_t font_color, ili9163_colors_t background);
 
-void ILI9163_WriteString(ili9163_led_t * screen, uint8_t x, uint8_t y, uint8_t * str, ili9163_fontlib_t font,
-                         ili9163_colors_t font_color, ili9163_colors_t background);
+void ILI9163_WriteString(ili9163_led_t * screen, uint8_t x, uint8_t y, uint8_t * str, fontlib_t * font,
+                         ili9163_colors_t font_color, ili9163_colors_t background, text_format_t text_format);
 
 void ILI9163_Fill(ili9163_led_t * screen, ili9163_colors_t color);
 
@@ -56,7 +52,10 @@ void ILI9163_Rect(ili9163_led_t * screen, uint8_t x, uint8_t y, uint8_t width, u
                   ili9163_colors_t border_color, ili9163_colors_t fill_color, uint8_t fill_flag);
 
 void ILI9163_Line(ili9163_led_t * screen, uint8_t x1, uint8_t y1, uint8_t x2, uint8_t y2,
-                  ili9163_colors_t color);
+                  ili9163_colors_t color, uint8_t thickness);
+
+void ILI9163_Circ(ili9163_led_t * screen, uint8_t x, uint8_t y, int8_t radius,
+                  ili9163_colors_t border_color, uint8_t border_thick, ili9163_colors_t fill_color, uint8_t fill_flag);
 
 void ILI9163_Init(ili9163_led_t * screen, SPI_HandleTypeDef * hspi, GPIO_TypeDef * cs_port, uint16_t cs_pin, GPIO_TypeDef * a0_port, uint16_t a0_pin, GPIO_TypeDef * reset_port, uint16_t reset_pin);
 

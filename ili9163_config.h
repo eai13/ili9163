@@ -10,11 +10,10 @@
 #define ILI9163_CS_PIN  CS_Pin
 #define ILI9163_CS_PORT CS_GPIO_Port
 
-#define ILI9163_COL_START   2
-#define ILI9163_ROW_START   1
-
-extern uint8_t ** ili9163_font_size;
-extern uint8_t *** ili9163_font;
+#define ILI9163_COL_START       2
+#define ILI9163_ROW_START       1
+#define ILI9163_SCREEN_WIDTH    128
+#define ILI9163_SCREEN_HEIGHT   128
 
 typedef enum ili9163_cmd{
     ILI9163_CMD_NOP                                 = (uint8_t)0x00,

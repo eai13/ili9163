@@ -1,6 +1,6 @@
 #include "ili9163_font.h"
 
-static const uint8_t ili9163_font9x6[] = {
+static const uint8_t font9x6[] = {
     0b000000, 0b000000, 0b000000, 0b000000, 0b000000, 0b000000, 0b000000, 0b000000, 0b000000,   // space
     0b001000, 0b001000, 0b001000, 0b001000, 0b001000, 0b001000, 0b000000, 0b001000, 0b000000,   // !
     0b010010, 0b010010, 0b000000, 0b000000, 0b000000, 0b000000, 0b000000, 0b000000, 0b000000,   // "
@@ -98,8 +98,26 @@ static const uint8_t ili9163_font9x6[] = {
     0b000000, 0b000000, 0b000110, 0b101101, 0b011000, 0b000000, 0b000000, 0b000000, 0b000000   // ~
 };
 
-ili9163_fontlib_t font_9x6 = {
-    .height = 8,
-    .width = 5,
-    .data = ili9163_font9x6
+fontlib_t font_9x6 = {
+    .height = 9,
+    .width = 6,
+    .h_spacing = 2,
+    .v_spacing = 5,
+    .data = font9x6
 };
+
+void Font_SetVerticalSpacing(fontlib_t * font, uint8_t new_spacing){
+    font->h_spacing = new_spacing;
+}
+
+uint8_t Font_GetVerticalSpacing(fontlib_t * font){
+    return font->h_spacing;
+}
+
+void Font_SetHorizontalSpacing(fontlib_t * font, uint8_t new_spacing){
+    font->h_spacing = new_spacing;
+}
+
+uint8_t Font_GetHorizontalSpacing(fontlib_t * font){
+    return font->h_spacing;
+}
